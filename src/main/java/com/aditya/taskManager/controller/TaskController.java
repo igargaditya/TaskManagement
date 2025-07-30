@@ -88,7 +88,8 @@ public class TaskController {
         } else {
             tasks = taskService.getAll();
         }
-        return new ResponseEntity<>(tasks,HttpStatus.OK);
+        if(!tasks.isEmpty()) return new ResponseEntity<>(tasks,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/sorted")
@@ -105,7 +106,8 @@ public class TaskController {
         );
 
         List<Task> tasks = taskService.getAll(sort);
-        return new ResponseEntity<>(tasks,HttpStatus.OK);
+        if(!tasks.isEmpty()) return new ResponseEntity<>(tasks,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
