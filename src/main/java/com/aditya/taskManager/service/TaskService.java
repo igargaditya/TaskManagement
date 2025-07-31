@@ -2,7 +2,9 @@ package com.aditya.taskManager.service;
 
 import com.aditya.taskManager.entity.Task;
 import com.aditya.taskManager.enums.TaskStatus;
+import com.aditya.taskManager.exception.InvalidTaskException;
 import com.aditya.taskManager.repository.TaskRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,7 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public List<Task> getAll() {
+    public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
@@ -23,12 +25,27 @@ public class TaskService {
         taskRepository.save(newTask);
     }
 
-    public Optional<Task> findById(Long id) {
+    public Optional<Task> findTaskById(Long id) {
         return taskRepository.findById(id);
     }
 
     public void deleteTaskById(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public void editTask(Task task, @Valid Task updateTask) {
+        try {
+            task.setTitle(updateTask.getTitle());
+            task.setDescription(updateTask.getDescription() != null && !updateTask.getDescription().equals("") ?
+                    updateTask.getDescription() : task.getDescription());
+            task.setStatus(updateTask.getStatus() != null && !updateTask.getStatus().equals("") ?
+                    updateTask.getStatus() : task.getStatus());
+            task.setAssignedTo(updateTask.getAssignedTo()!=null? updateTask.getAssignedTo() : task.getAssignedTo());
+            saveTask(task);
+        }
+        catch(Exception e){
+            throw new InvalidTaskException("Task Body is Incorrect");
+        }
     }
 
 
@@ -46,7 +63,8 @@ public class TaskService {
 
 
 
-    public List<Task> getAll(Sort sort) {
+    public List<Task> getAllTasks(Sort sort) {
         return taskRepository.findAll(sort);
     }
+
 }

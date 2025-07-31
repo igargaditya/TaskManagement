@@ -1,6 +1,7 @@
 package com.aditya.taskManager.service;
 
 import com.aditya.taskManager.entity.User;
+import com.aditya.taskManager.exception.InvalidTaskException;
 import com.aditya.taskManager.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,28 +19,29 @@ public class UserService {
         userRepository.save(newUser);
     }
 
-    public List<User> getAll() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    public Optional<User> findUserById(Long id){
+
+    public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    public User editUser(Long id, @Valid User newUser) {
-        User oldUser = findUserById(id).orElse(null);
-        if(oldUser!=null){
-            oldUser.setFirstName(newUser.getFirstName());
-            oldUser.setLastName(newUser.getLastName());
-            oldUser.setTimeZone(newUser.getTimeZone());
-            oldUser.setActive(newUser.isActive());
-            saveUser(oldUser);
-            return oldUser;
+    public void editTask(User user, @Valid User newUser) {
+        try {
+            user.setFirstName(newUser.getFirstName());
+            user.setLastName(newUser.getLastName());
+            user.setIsActive(newUser.getIsActive());
+            user.setTimeZone(newUser.getTimeZone());
+            saveUser(user);
         }
-        return null ;
+        catch(Exception e){
+            throw new InvalidTaskException("Task Body is Incorrect");
+        }
 
     }
 }
