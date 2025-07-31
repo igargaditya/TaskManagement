@@ -31,7 +31,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public void editTask(User user, @Valid User newUser) {
+    public void editUs(User user, @Valid User newUser) {
         try {
             user.setFirstName(newUser.getFirstName());
             user.setLastName(newUser.getLastName());

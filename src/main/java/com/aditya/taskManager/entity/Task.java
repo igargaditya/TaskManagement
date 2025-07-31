@@ -4,7 +4,9 @@ package com.aditya.taskManager.entity;
 import com.aditya.taskManager.enums.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.hibernate.annotations.OnDelete;
@@ -21,6 +23,8 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Task {
 
     @Id
@@ -49,5 +53,38 @@ public class Task {
     private User assignedTo;
 
 
+    // For Testing Purpose
 
+    public Task(long id, String title,String description, TaskStatus status,User assignedTo) {
+        this.id = id;
+        this.title = title;
+        this.description=description;
+        this.status = status;
+        this.assignedTo = assignedTo;
+    }
+
+    public Task(long id, String title, User assignedTo) {
+        this.id = id;
+        this.title = title;
+        this.assignedTo = assignedTo;
+    }
+
+    public Task(long id, String title, TaskStatus status,User assignedTo) {
+        this.id = id;
+        this.title = title;
+        this.status = status;
+        this.assignedTo = assignedTo;
+    }
+
+    public Task(long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public Task(long id, String title, TaskStatus status) {
+        this.id = id;
+        this.title = title;
+        this.status = status;
+
+    }
 }

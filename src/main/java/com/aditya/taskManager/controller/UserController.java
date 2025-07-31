@@ -64,7 +64,7 @@ public class UserController {
     public String deleteUser(@PathVariable Long id,@RequestBody @Valid User newUser){
         User user = userService.findUserById(id).orElse(null);
         if (user!=null) {
-            userService.editTask(user, newUser);
+            userService.editUser(user, newUser);
             return "Task Updated";
         }
         throw new ResourceNotFoundException("No Task with Given ID");
