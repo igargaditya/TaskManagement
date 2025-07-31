@@ -1,4 +1,7 @@
 package com.aditya.taskManager.exception;
 
-public class InvalidTaskException {
+public class InvalidTaskException extends RuntimeException {
+    public InvalidTaskException(String message) {
+        super(message);
+    }
 }
