@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getTaskById(@PathVariable Long id){
+    public User getUserById(@PathVariable Long id){
         User user = userService.findUserById(id).orElse(null);
         if(user!=null){
             return user ;
@@ -61,7 +61,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public String deleteUser(@PathVariable Long id,@RequestBody @Valid User newUser){
+    public String EditUser(@PathVariable Long id,@RequestBody @Valid User newUser){
         User user = userService.findUserById(id).orElse(null);
         if (user!=null) {
             userService.editUser(user, newUser);
