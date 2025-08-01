@@ -1,14 +1,18 @@
 package com.aditya.taskManager.controller;
 
 import com.aditya.taskManager.entity.Task;
+import com.aditya.taskManager.enums.TaskStatus;
 import com.aditya.taskManager.exception.InvalidTaskException;
 import com.aditya.taskManager.exception.ResourceNotFoundException;
 import com.aditya.taskManager.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -70,43 +74,44 @@ public class TaskController {
            throw new ResourceNotFoundException("No Task with Given ID");
     }
 
-//
-//    @GetMapping("/filter")
-//    public ResponseEntity<List<Task>> getFilteredTasks(
-//            @RequestParam(required = false) TaskStatus status,
-//            @RequestParam(required = false) Long userId
-//    ) {
-//        List<Task> tasks;
-//        if (status != null && userId != null) {
-//            tasks = taskService.findByStatusAndAssignedTo(status, userId);
-//        } else if (status != null) {
-//            tasks = taskService.findByStatus(status);
-//        } else if (userId != null) {
-//            tasks = taskService.findByAssignedTo(userId);
-//        } else {
-//            tasks = taskService.getAll();
-//        }
-//        if(!tasks.isEmpty()) return new ResponseEntity<>(tasks,HttpStatus.OK);
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
-//
-//    @GetMapping("/sorted")
-//    public ResponseEntity<List<Task>> getSortedTasks(
-//            @RequestParam(defaultValue = "createdAt") String sortBy,
-//            @RequestParam(defaultValue = "asc") String direction
-//    ) {
-//        String[] sortFields = sortBy.split(",");
-//
-//        Sort sort = Sort.by(
-//                Arrays.stream(sortFields)
-//                        .map(field -> direction.equalsIgnoreCase("desc") ? Sort.Order.desc(field) : Sort.Order.asc(field))
-//                        .toList()
-//        );
-//
-//        List<Task> tasks = taskService.getAll(sort);
-//        if(!tasks.isEmpty()) return new ResponseEntity<>(tasks,HttpStatus.OK);
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
+
+    @GetMapping("/filter")
+    public List<Task> getFilteredTasks(
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) Long userId
+    ) {
+        List<Task> tasks;
+        if (status != null && userId != null) {
+            tasks = taskService.findByStatusAndAssignedTo(status, userId);
+        } else if (status != null) {
+            tasks = taskService.findByStatus(status);
+        } else if (userId != null) {
+            tasks = taskService.findByAssignedTo(userId);
+        } else {
+            tasks = taskService.getAllTasks();
+        }
+
+        if(!tasks.isEmpty()) return tasks ;
+        throw new ResourceNotFoundException("No Task Found");
+    }
+
+    @GetMapping("/sorted")
+    public List<Task> getSortedTasks(
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        String[] sortFields = sortBy.split(",");
+
+        Sort sort = Sort.by(
+                Arrays.stream(sortFields)
+                        .map(field -> direction.equalsIgnoreCase("desc") ? Sort.Order.desc(field) : Sort.Order.asc(field))
+                        .toList()
+        );
+
+        List<Task> tasks = taskService.getAllTasks(sort);
+        if(!tasks.isEmpty()) return tasks;
+        throw new ResourceNotFoundException("No Task Found");
+    }
 
 
 }
