@@ -10,7 +10,7 @@ A simple RESTful API built with Spring Boot for managing tasks assigned to users
 
 1) Clone the Repository
 
-`git clone https://github.com/your-username/taskManager.git`
+`git clone https://github.com/igargaditya/taskManager.git`
 
 `cd taskManager`
 
